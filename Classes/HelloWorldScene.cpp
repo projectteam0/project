@@ -1,6 +1,9 @@
 #include "HelloWorldScene.h"
 #include "AppMacros.h"
-
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	#include "jni.h"
+	#include "platform/android/jni/JniHelper.h"
+#endif
 USING_NS_CC;
 
 
@@ -87,5 +90,21 @@ void HelloWorld::menuCloseCallback(Ref* sender)
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
+#endif
+}
+
+void HelloWorld::openUrlWithBrowser(std::string strUrl)
+{
+	//判断当前是否为Android平台
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	//定义Jni函数信息结构体
+	JniMethodInfo minfo;
+	bool isHave = JniHelper::getStaticMethodInfo(minfo,"org/cocos2dx/cpp/AppActivity","openUrl", "(Ljava/lang/String;)V");
+	if (isHave)
+	{
+		jstring jUrl = minfo.env->NewStringUTF(strUrl.c_str());
+		minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID,jUrl);
+		minfo.env->DeleteLocalRef(jUrl);
+	}
 #endif
 }

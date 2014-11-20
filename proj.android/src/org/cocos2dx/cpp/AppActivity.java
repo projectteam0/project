@@ -28,5 +28,25 @@ package org.cocos2dx.cpp;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+
 public class AppActivity extends Cocos2dxActivity {
+	///<用于C++调用，用浏览器打开页面
+	protected static Activity mActivity = null;
+	public static void openUrlWithBrowser(String strUrl){
+		if(null != mActivity)
+		{
+			Uri uri = Uri.parse(strUrl);
+			Intent it = new Intent(Intent.ACTION_VIEW,uri);
+			mActivity.startActivity(it);
+		}
+	}
+	
+	protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mActivity = this;
+	}
 }
