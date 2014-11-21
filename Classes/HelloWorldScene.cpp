@@ -81,7 +81,7 @@ bool HelloWorld::init()
 
 void HelloWorld::menuCloseCallback(Ref* sender)
 {
-	//m_UpdateMgr.RequestUpdateInfo("1.0.0.1001","de7cff1c51b3f1d64ccdc609d65c6346");
+	//m_UpdateMgr.RequestUpdateInfo("1.0.1","de7cff1c51b3f1d64ccdc609d65c6346");
 	//return;
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
@@ -97,16 +97,17 @@ void HelloWorld::menuCloseCallback(Ref* sender)
 
 void HelloWorld::openUrlWithBrowser(std::string strUrl)
 {
+	Application::getInstance()->openURL(strUrl);
 	//判断当前是否为Android平台
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-	//定义Jni函数信息结构体
-	JniMethodInfo minfo;
-	bool isHave = JniHelper::getStaticMethodInfo(minfo,"org/cocos2dx/cpp/AppActivity","openUrl", "(Ljava/lang/String;)V");
-	if (isHave)
-	{
-		jstring jUrl = minfo.env->NewStringUTF(strUrl.c_str());
-		minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID,jUrl);
-		minfo.env->DeleteLocalRef(jUrl);
-	}
-#endif
+//#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+//	//定义Jni函数信息结构体
+//	JniMethodInfo minfo;
+//	bool isHave = JniHelper::getStaticMethodInfo(minfo,"org/cocos2dx/cpp/AppActivity","openUrl", "(Ljava/lang/String;)V");
+//	if (isHave)
+//	{
+//		jstring jUrl = minfo.env->NewStringUTF(strUrl.c_str());
+//		minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID,jUrl);
+//		minfo.env->DeleteLocalRef(jUrl);
+//	}
+//#endif
 }
