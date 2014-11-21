@@ -13,7 +13,7 @@ public:
 public:
 	void onUpdateRequestCompleted(cocos2d::network::HttpClient *sender, cocos2d::network::HttpResponse *response);
 private:
-	void ProcessUpdateInfo();
+	void ProcessUpdateInfo(const std::string& strErrno,const std::string& strVersion,const std::string& strUuid,const std::string& strUrl);
 };
 
 #endif // __UPDATEMGR_H__
