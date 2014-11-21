@@ -81,6 +81,8 @@ bool HelloWorld::init()
 
 void HelloWorld::menuCloseCallback(Ref* sender)
 {
+	//m_UpdateMgr.RequestUpdateInfo("1.0.0.1001","de7cff1c51b3f1d64ccdc609d65c6346");
+	//return;
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
     return;

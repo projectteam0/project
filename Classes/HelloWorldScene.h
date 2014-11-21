@@ -2,6 +2,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include"update/UpdateMgr.h"
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -19,6 +20,8 @@ public:
     CREATE_FUNC(HelloWorld);
 public:
     void openUrlWithBrowser(std::string strUrl);
+private:
+	UpdateMgr m_UpdateMgr;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
