@@ -12,6 +12,8 @@ public:
 	bool RequestUpdateInfo(const std::string& strVersion,const std::string& strUUID);
 public:
 	void onUpdateRequestCompleted(cocos2d::network::HttpClient *sender, cocos2d::network::HttpResponse *response);
+private:
+	void ProcessUpdateInfo();
 };
 
 #endif // __UPDATEMGR_H__

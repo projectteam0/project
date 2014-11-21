@@ -94,3 +94,8 @@ void UpdateMgr::onUpdateRequestCompleted(cocos2d::network::HttpClient *sender, c
 		strUrl = vUrl.GetString();
 	}
 }
+
+void UpdateMgr::ProcessUpdateInfo(const std::string& strErrno,const std::string& strVersion,const std::string& strUuid,const std::string& strUrl)
+{
+
+}
