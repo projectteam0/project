@@ -107,11 +107,11 @@ uuid	用户唯一标示
 "errno"  : "0"/"1"/"-1"
 "win":100,                                        //击败百分比
 "duration": 12345                               //持续时间，秒
-"competitor":12345,                        //对手持续时间，秒
-"result":1                         //pk结果，1表示赢了，0表示输了         
+"competitor":12345                        //对手持续时间，秒    
 }
 errmsg :正常/uuid错误/其他错误
 win: 最大值是100， 服务器内部有错误的时候是-1.
+修改一下，去掉  "result":1                         //pk结果，1表示赢了，0表示输了    客户端自己比较吧，谁大就谁赢了
 */
 
 
@@ -261,6 +261,64 @@ void UpdateMgr::onLoveStartCompleted(cocos2d::network::HttpClient *sender, cocos
 	if (vNow.IsInt())
 	{
 		nowPerson = vNow.GetInt();
+	}
+}
+
+/*
+上传用户反馈的接口
+
+http://www.nuanai.me/a/feedback.php
+
+post数据,  
+uuid=de7cff1c51b3f1d64ccdc609d65c6346&content=a1bcdeee
+uuid	用户唯一标示
+content 用utf-8编码
+content最多1024个字
+返回值
+{
+"errno"  : "0"/"1"/"-1"  
+}
+errmsg :正常/uuid错误/其他错误
+
+*/
+
+bool UpdateMgr::RequestFeedback(const std::string& strUUID, const std::string& data)
+{
+	std::string strUrl = "http://www.nuanai.me/a/feedback.php";
+
+	std::string content = "uuid="+strUUID+"&content="+data;
+
+	cocos2d::network::HttpRequest* request = new  cocos2d::network::HttpRequest();
+	request->setUrl(strUrl.c_str());
+	request->setRequestType(cocos2d::network::HttpRequest::Type::POST);
+	request->setRequestData(content.c_str(), content.size());
+	request->setResponseCallback(this, httpresponse_selector(UpdateMgr::onFeedbackCompleted));
+	request->setTag("Post nuanai  info");
+	cocos2d::network::HttpClient::getInstance()->send(request);
+	request->release();
+	return true;
+}
+
+void UpdateMgr::onFeedbackCompleted(cocos2d::network::HttpClient *sender, cocos2d::network::HttpResponse *response)
+{
+	if (!response) {
+		return;     
+	}
+
+	if (0 != strlen(response->getHttpRequest()->getTag())) {
+
+	}
+
+	long statusCode = response->getResponseCode();
+	if (200 != statusCode || !response->isSucceed()) {
+		return;
+	}
+
+	std::vector<char>* buffer = response->getResponseData();
+	std::string strResponse;
+	for (unsigned int i = 0 ; i < buffer->size() ; i++) {
+		char c = (*buffer)[i];
+		strResponse += c;
 	}
 }
 
