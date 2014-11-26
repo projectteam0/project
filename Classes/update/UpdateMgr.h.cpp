@@ -1,4 +1,5 @@
 ﻿#include "UpdateMgr.h"
+#include "base/CCUserDefault.h"
 
 UpdateMgr::UpdateMgr()
 {
@@ -241,5 +242,8 @@ void UpdateMgr::onLoveStartCompleted(cocos2d::network::HttpClient *sender, cocos
 
 void UpdateMgr::ProcessUpdateInfo(const std::string& strErrno,const std::string& strVersion,const std::string& strUuid,const std::string& strUrl)
 {
-
+	if(!strUuid.empty())
+	{
+		cocos2d::UserDefault::getInstance()->setStringForKey("uuid",strUuid);
+	}
 }
