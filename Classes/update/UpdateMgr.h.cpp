@@ -15,7 +15,7 @@ bool UpdateMgr::RequestUpdateInfo(const std::string& strVersion,const std::strin
 	std::string strUrl = "http://www.nuanai.me/a/checkversion.php?version=";
 	strUrl += strVersion;
 	strUrl += "&uuid=";
-	strUrl + strUUID;
+	strUrl += strUUID;
 
 	cocos2d::network::HttpRequest* request = new  cocos2d::network::HttpRequest();
     request->setUrl(strUrl.c_str());
@@ -95,26 +95,29 @@ void UpdateMgr::onUpdateRequestCompleted(cocos2d::network::HttpClient *sender, c
 	}
 }
 
-/*
-爱爱结束接口：
-http://www.nuanai.me/a/loveend.php?uuid=de7cff1c51b3f1d64ccdc609d65c6346
-uuid	用户唯一标示
+/*爱爱结束接口：
 
+http://www.nuanai.me/a/loveend.php?uuid=de7cff1c51b3f1d64ccdc609d65c6346&pk=1
+uuid	用户唯一标示
+带上pk=1就是pk模式。
 
 返回值
 {
 "errno"  : "0"/"1"/"-1"
 "win":100,                                        //击败百分比
-
+"duration": 12345                               //持续时间，秒
+"competitor":12345,                        //对手持续时间，秒
+"result":1                         //pk结果，1表示赢了，0表示输了         
 }
 errmsg :正常/uuid错误/其他错误
 win: 最大值是100， 服务器内部有错误的时候是-1.
 */
 
+
 bool UpdateMgr::RequestLoveEnd(const std::string& strUUID)
 {
-	std::string strUrl = "http://www.nuanai.me/a/loveend.php?uuid=";
-	strUrl + strUUID;
+	std::string strUrl = "http://www.nuanai.me/a/loveend.php?pk=1&uuid=";
+	strUrl += strUUID;
 
 	cocos2d::network::HttpRequest* request = new  cocos2d::network::HttpRequest();
 	request->setUrl(strUrl.c_str());
@@ -154,6 +157,9 @@ void UpdateMgr::onLoveEndCompleted(cocos2d::network::HttpClient *sender, cocos2d
 	//获取JSon数据
 	std::string strErrno;
 	int percent = 50;
+	int competitor = 1;
+	int result = 0;
+	int duration = 1;
 	const rapidjson::Value& vErrno = d1["errno"];
 	if(vErrno.IsString())
 	{
@@ -164,6 +170,24 @@ void UpdateMgr::onLoveEndCompleted(cocos2d::network::HttpClient *sender, cocos2d
 	if (vWin.IsInt())
 	{
 		percent = vWin.GetInt();
+	}
+
+	const rapidjson::Value& vcompetitor = d1["competitor"];
+	if (vcompetitor.IsInt())
+	{
+		competitor = vcompetitor.GetInt();
+	}
+
+	const rapidjson::Value& vresult = d1["result"];
+	if (vresult.IsInt())
+	{
+		result = vresult.GetInt();
+	}
+
+	const rapidjson::Value& vduration = d1["duration"];
+	if (vduration.IsInt())
+	{
+		duration = vduration.GetInt();
 	}
 }
 
@@ -186,7 +210,7 @@ errmsg :正常/uuid错误/其他错误
 bool UpdateMgr::RequestLoveStart(const std::string& strUUID)
 {
 	std::string strUrl = "http://www.nuanai.me/a/lovestart.php?uuid=";
-	strUrl + strUUID;
+	strUrl += strUUID;
 
 	cocos2d::network::HttpRequest* request = new  cocos2d::network::HttpRequest();
 	request->setUrl(strUrl.c_str());
