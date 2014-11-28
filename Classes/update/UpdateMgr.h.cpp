@@ -1,5 +1,6 @@
 ﻿#include "UpdateMgr.h"
 #include "base/CCUserDefault.h"
+#include "base/ccUTF8.h"
 
 UpdateMgr::UpdateMgr()
 {
@@ -11,12 +12,12 @@ UpdateMgr::~UpdateMgr()
 	
 }
 
-bool UpdateMgr::RequestUpdateInfo(const std::string& strVersion,const std::string& strUUID)
+bool UpdateMgr::RequestUpdateInfo(const std::string& strVersion)
 {
 	std::string strUrl = "http://www.nuanai.me/a/checkversion.php?version=";
 	strUrl += strVersion;
 	strUrl += "&uuid=";
-	strUrl += strUUID;
+	strUrl += m_uuid;
 
 	cocos2d::network::HttpRequest* request = new  cocos2d::network::HttpRequest();
     request->setUrl(strUrl.c_str());
@@ -86,7 +87,7 @@ void UpdateMgr::onUpdateRequestCompleted(cocos2d::network::HttpClient *sender, c
 	const rapidjson::Value& vUuid = d1["uuid"];
 	if(vErrno.IsString())
 	{
-		strUuid = vUuid.GetString();
+		m_uuid = vUuid.GetString();
 	}
 
 	const rapidjson::Value& vUrl = d1["url"];
@@ -94,6 +95,11 @@ void UpdateMgr::onUpdateRequestCompleted(cocos2d::network::HttpClient *sender, c
 	{
 		strUrl = vUrl.GetString();
 	}
+
+	RequestLoveStart();
+	RequestLoveEnd();
+	
+	RequestFeedback("测试");
 }
 
 /*爱爱结束接口：
@@ -115,10 +121,10 @@ win: 最大值是100， 服务器内部有错误的时候是-1.
 */
 
 
-bool UpdateMgr::RequestLoveEnd(const std::string& strUUID)
+bool UpdateMgr::RequestLoveEnd()
 {
 	std::string strUrl = "http://www.nuanai.me/a/loveend.php?pk=1&uuid=";
-	strUrl += strUUID;
+	strUrl += m_uuid;
 
 	cocos2d::network::HttpRequest* request = new  cocos2d::network::HttpRequest();
 	request->setUrl(strUrl.c_str());
@@ -208,10 +214,10 @@ uuid	用户唯一标示
 errmsg :正常/uuid错误/其他错误
 */
 
-bool UpdateMgr::RequestLoveStart(const std::string& strUUID)
+bool UpdateMgr::RequestLoveStart()
 {
 	std::string strUrl = "http://www.nuanai.me/a/lovestart.php?uuid=";
-	strUrl += strUUID;
+	strUrl += m_uuid;
 
 	cocos2d::network::HttpRequest* request = new  cocos2d::network::HttpRequest();
 	request->setUrl(strUrl.c_str());
@@ -282,11 +288,11 @@ errmsg :正常/uuid错误/其他错误
 
 */
 
-bool UpdateMgr::RequestFeedback(const std::string& strUUID, const std::string& data)
+bool UpdateMgr::RequestFeedback(const std::string& data)
 {
 	std::string strUrl = "http://www.nuanai.me/a/feedback.php";
 
-	std::string content = "uuid="+strUUID+"&content="+data;
+	std::string content = "uuid="+m_uuid+"&content="+data;
 
 	cocos2d::network::HttpRequest* request = new  cocos2d::network::HttpRequest();
 	request->setUrl(strUrl.c_str());
