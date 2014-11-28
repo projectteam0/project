@@ -98,9 +98,9 @@ void HelloWorld::menuCloseCallback(Ref* sender)
 void HelloWorld::openUrlWithBrowser(std::string strUrl)
 {
 	Application::getInstance()->openURL(strUrl);
-	//ÅĞ¶Ïµ±Ç°ÊÇ·ñÎªAndroidÆ½Ì¨
+	//åˆ¤æ–­å½“å‰æ˜¯å¦ä¸ºAndroidå¹³å°
 //#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-//	//¶¨ÒåJniº¯ÊıĞÅÏ¢½á¹¹Ìå
+//	//å®šä¹‰Jniå‡½æ•°ä¿¡æ¯ç»“æ„ä½“
 //	JniMethodInfo minfo;
 //	bool isHave = JniHelper::getStaticMethodInfo(minfo,"org/cocos2dx/cpp/AppActivity","openUrl", "(Ljava/lang/String;)V");
 //	if (isHave)
