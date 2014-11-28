@@ -58,7 +58,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = LabelTTF::create("Hello World", "Arial", TITLE_FONT_SIZE);
+    auto label = LabelTTF::create("我们的故事", "Arial", TITLE_FONT_SIZE);
     
     // position the label on the center of the screen
     label->setPosition(origin.x + visibleSize.width/2,
@@ -101,9 +101,8 @@ void HelloWorld::menuCloseCallback(Ref* sender)
 void HelloWorld::openUrlWithBrowser(std::string strUrl)
 {
 	Application::getInstance()->openURL(strUrl);
-	//判断当前是否为Android平台
+
 //#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-//	//定义Jni函数信息结构体
 //	JniMethodInfo minfo;
 //	bool isHave = JniHelper::getStaticMethodInfo(minfo,"org/cocos2dx/cpp/AppActivity","openUrl", "(Ljava/lang/String;)V");
 //	if (isHave)
