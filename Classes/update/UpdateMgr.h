@@ -1,4 +1,4 @@
-﻿#ifndef __UPDATEMGR_H__
+#ifndef __UPDATEMGR_H__
 #define __UPDATEMGR_H__
 /*记得要引头文件*/
 #include "extensions/cocos-ext.h"
