@@ -82,7 +82,7 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 mTitle = "Section2";
-                mHttpPostService.HttpPostData(ConstantUtil.HTTP_CMD_FEEDBACK,mUuid,"test24204920");
+                mHttpPostService.HttpPostData(ConstantUtil.HTTP_CMD_FEEDBACK,mUuid,"test feed back 你好");
                 break;
         }
     }
