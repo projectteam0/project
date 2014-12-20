@@ -116,6 +116,11 @@ public class HttpGetService {
                         Log.i(TAG,mGetResualtData);
                         return true;
                     }
+                    else if(resultinfo.getInt(ConstantUtil.KEY_ERRORNO) == 1 && ConstantUtil.HTTP_CMD_UPDATE == mCmd)
+                    {
+                        mGetResualtData = strResult;
+                        return true;
+                    }
                 }
             }catch(Exception e){
                 return false;

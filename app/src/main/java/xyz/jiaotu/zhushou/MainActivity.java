@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
 import android.util.Log;
+import android.content.SharedPreferences;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,IHttpGetCmdCallback,IHttpPostCmdCallback{
@@ -35,6 +36,7 @@ public class MainActivity extends ActionBarActivity
 
     private HttpGetService mHttpGetService = null;
     private HttpPostService mHttpPostService = null;
+    private String mUuid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        initUuid();
         initNetworkService();
     }
 
@@ -68,20 +71,18 @@ public class MainActivity extends ActionBarActivity
                     mTitle = "Section1";
                     HttpGetParam param = new HttpGetParam();
                     param.mStartIndex = 0;
-                    String uuid = "bd234855";
-                    mHttpGetService.HttpGetData(ConstantUtil.HTTP_CMD_GETGAMELIST,uuid,param);
+                    mHttpGetService.HttpGetData(ConstantUtil.HTTP_CMD_GETGAMELIST,mUuid,param);
                 }
                 break;
             case 2:
                 mTitle = "Section2";
                 HttpGetParam param = new HttpGetParam();
                 param.mVersion = "1.0.0";
-                String uuid = "bd234855";
-                mHttpGetService.HttpGetData(ConstantUtil.HTTP_CMD_UPDATE,uuid,param);
+                mHttpGetService.HttpGetData(ConstantUtil.HTTP_CMD_UPDATE,mUuid,param);
                 break;
             case 3:
                 mTitle = "Section2";
-                mHttpPostService.HttpPostData(ConstantUtil.HTTP_CMD_FEEDBACK,"bsajdbakjd","test24204920");
+                mHttpPostService.HttpPostData(ConstantUtil.HTTP_CMD_FEEDBACK,mUuid,"test24204920");
                 break;
         }
     }
@@ -127,6 +128,22 @@ public class MainActivity extends ActionBarActivity
         mHttpPostService = new HttpPostService(MainActivity.this);
     }
 
+    private void initUuid(){
+        SharedPreferences settings = getSharedPreferences(ConstantUtil.STR_PREFS_NAME, Activity.MODE_PRIVATE);
+        mUuid = settings.getString("uuid", "abcd");
+    }
+
+    private void SetUuid(String uuid){
+        if(!uuid.equals(mUuid))
+        {
+            SharedPreferences settings = getSharedPreferences(ConstantUtil.STR_PREFS_NAME, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("uuid", uuid);
+            editor.commit();
+            mUuid = uuid;
+        }
+    }
+
     public void onHttpGetCmdSucceeded(String cmd,String data){
 
     }
@@ -136,7 +153,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void onHttpGetUpdateInfo(String version,String uuid,String url){
-
+        SetUuid(uuid);
     }
 
     public void onHttpGetGameInfoList(ArrayList<GameInfo> listItem)

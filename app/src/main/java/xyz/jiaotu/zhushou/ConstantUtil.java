@@ -5,6 +5,7 @@ package xyz.jiaotu.zhushou;
  */
 public class ConstantUtil {
     ///< 字符串
+    public static final String STR_PREFS_NAME = "prefsfile";
     public static final String STR_UTF8 = "utf8";
     public static final String EMPTY_GAMEINFO_LIST = "null\n";
     public static final String POST_RESULT_SUCCESS = "0";
