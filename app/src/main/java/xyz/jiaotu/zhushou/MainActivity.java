@@ -17,10 +17,11 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
+import java.util.ArrayList;
+import android.util.Log;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,IHttpGetCmdCallback,IHttpPostCmdCallback{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -32,6 +33,8 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    private HttpGetService mHttpGetService = null;
+    private HttpPostService mHttpPostService = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +48,8 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        initNetworkService();
     }
 
     @Override
@@ -59,13 +64,24 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                {
+                    mTitle = "Section1";
+                    HttpGetParam param = new HttpGetParam();
+                    param.mStartIndex = 0;
+                    String uuid = "bd234855";
+                    mHttpGetService.HttpGetData(ConstantUtil.HTTP_CMD_GETGAMELIST,uuid,param);
+                }
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = "Section2";
+                HttpGetParam param = new HttpGetParam();
+                param.mVersion = "1.0.0";
+                String uuid = "bd234855";
+                mHttpGetService.HttpGetData(ConstantUtil.HTTP_CMD_UPDATE,uuid,param);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                mTitle = "Section2";
+                mHttpPostService.HttpPostData(ConstantUtil.HTTP_CMD_FEEDBACK,"bsajdbakjd","test24204920");
                 break;
         }
     }
@@ -106,6 +122,35 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void initNetworkService(){
+        mHttpGetService = new HttpGetService(MainActivity.this);
+        mHttpPostService = new HttpPostService(MainActivity.this);
+    }
+
+    public void onHttpGetCmdSucceeded(String cmd,String data){
+
+    }
+
+    public void onHttpGetCmdFailed(String cmd){
+
+    }
+
+    public void onHttpGetUpdateInfo(String version,String uuid,String url){
+
+    }
+
+    public void onHttpGetGameInfoList(ArrayList<GameInfo> listItem)
+    {
+        Log.i("MainActivity","onHttpGetGameInfoList");
+    }
+
+    public void onPostSucceeded(String cmd,String packet){
+        Log.i("MainActivity","onPostSucceeded");
+    }
+
+    public void onPostFailed(String cmd,String error,String packet){
+        Log.i("MainActivity","onPostFailed");
+    }
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -145,5 +190,4 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 }
