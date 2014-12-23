@@ -22,7 +22,7 @@ import android.util.Log;
 import android.content.SharedPreferences;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,IHttpGetCmdCallback,IHttpPostCmdCallback{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -33,10 +33,6 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
-    private HttpGetService mHttpGetService = null;
-    private HttpPostService mHttpPostService = null;
-    private String mUuid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +46,6 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
-        initUuid();
-        initNetworkService();
     }
 
     @Override
@@ -69,20 +62,13 @@ public class MainActivity extends ActionBarActivity
             case 1:
                 {
                     mTitle = "Section1";
-                    HttpGetParam param = new HttpGetParam();
-                    param.mStartIndex = 0;
-                    mHttpGetService.HttpGetData(ConstantUtil.HTTP_CMD_GETGAMELIST,mUuid,param);
                 }
                 break;
             case 2:
                 mTitle = "Section2";
-                HttpGetParam param = new HttpGetParam();
-                param.mVersion = "1.0.0";
-                mHttpGetService.HttpGetData(ConstantUtil.HTTP_CMD_UPDATE,mUuid,param);
                 break;
             case 3:
-                mTitle = "Section2";
-                mHttpPostService.HttpPostData(ConstantUtil.HTTP_CMD_FEEDBACK,mUuid,"test feed back 你好");
+                mTitle = "Section3";
                 break;
         }
     }
@@ -121,52 +107,6 @@ public class MainActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initNetworkService(){
-        mHttpGetService = new HttpGetService(MainActivity.this);
-        mHttpPostService = new HttpPostService(MainActivity.this);
-    }
-
-    private void initUuid(){
-        SharedPreferences settings = getSharedPreferences(ConstantUtil.STR_PREFS_NAME, Activity.MODE_PRIVATE);
-        mUuid = settings.getString("uuid", "abcd");
-    }
-
-    private void SetUuid(String uuid){
-        if(!uuid.equals(mUuid))
-        {
-            SharedPreferences settings = getSharedPreferences(ConstantUtil.STR_PREFS_NAME, Activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("uuid", uuid);
-            editor.commit();
-            mUuid = uuid;
-        }
-    }
-
-    public void onHttpGetCmdSucceeded(String cmd,String data){
-
-    }
-
-    public void onHttpGetCmdFailed(String cmd){
-
-    }
-
-    public void onHttpGetUpdateInfo(String version,String uuid,String url){
-        SetUuid(uuid);
-    }
-
-    public void onHttpGetGameInfoList(ArrayList<GameInfo> listItem)
-    {
-        Log.i("MainActivity","onHttpGetGameInfoList");
-    }
-
-    public void onPostSucceeded(String cmd,String packet){
-        Log.i("MainActivity","onPostSucceeded");
-    }
-
-    public void onPostFailed(String cmd,String error,String packet){
-        Log.i("MainActivity","onPostFailed");
     }
     /**
      * A placeholder fragment containing a simple view.
